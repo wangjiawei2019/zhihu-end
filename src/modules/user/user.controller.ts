@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-04-04 23:16:01
  * @LastEditors: wangjiawei
- * @LastEditTime: 2021-04-05 18:21:11
+ * @LastEditTime: 2021-04-05 23:05:57
  * @FilePath: /zhihu-end/src/modules/user/user.controller.ts
  */
 import { Controller, Get, UseGuards } from '@nestjs/common';
@@ -20,6 +20,6 @@ export class UserController {
   @Get('hello')
   @Role('admin')
   hello() {
-    return 'hello world';
+    return this.userService.hello();
   }
 }

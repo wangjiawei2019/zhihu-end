@@ -1,11 +1,12 @@
 /*
  * @Date: 2021-04-04 22:52:01
  * @LastEditors: wangjiawei
- * @LastEditTime: 2021-04-04 23:12:43
+ * @LastEditTime: 2021-04-05 23:42:53
  * @FilePath: /zhihu-end/src/db/db.module.ts
  */
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ArticleSchema } from './schema/article.schema';
 import { UserSchema } from './schema/user.schema';
 
 const MONGO_MODELS = MongooseModule.forFeature([
@@ -13,6 +14,11 @@ const MONGO_MODELS = MongooseModule.forFeature([
     name: 'USER_MODEL',
     schema: UserSchema,
     collection: 'user',
+  },
+  {
+    name: 'ARTICLE_MODEL',
+    schema: ArticleSchema,
+    collection: 'article',
   },
 ]);
 

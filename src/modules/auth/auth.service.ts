@@ -1,10 +1,10 @@
 /*
  * @Date: 2021-04-05 15:47:25
  * @LastEditors: wangjiawei
- * @LastEditTime: 2021-04-05 18:02:11
+ * @LastEditTime: 2021-04-05 23:51:59
  * @FilePath: /zhihu-end/src/modules/auth/auth.service.ts
  */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IResponse } from 'src/interface/response.interface';
 import { User } from 'src/interface/user.interface';
@@ -12,6 +12,8 @@ import { encript } from 'src/utils/encription';
 import { UserService } from '../user/user.service';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
+
+const logger = new Logger('auth.service');
 
 @Injectable()
 export class AuthService {
@@ -34,8 +36,8 @@ export class AuthService {
         message: `当前用户：${user.username} 已注册`,
       };
     } else {
+      const createUser = new this.userModel(user);
       try {
-        const createUser = new this.userModel(user);
         await createUser.save();
         return {
           code: 200,
@@ -84,7 +86,31 @@ export class AuthService {
     return pass;
   }
 
+  /**
+   * @description: 登陆后创建 token
+   * @param {User} user
+   * @return {*}
+   */
   async createToken(user: User): Promise<string> {
     return await this.jwtService.sign(user);
+  }
+
+  /**
+   * @description: 用户修改密码
+   * @param {User} user
+   * @return {*}
+   */
+  async alter(user: User): Promise<IResponse> {
+    const data = await this.userService.findOneByUsername(user.username);
+    if (!data) return { code: 404, message: `该用户：${user.username} 不存在` };
+    await this.userModel.findOneAndUpdate(
+      { username: user.username },
+      user,
+      {},
+      () => {
+        logger.log(`用户：${user.username} 修改密码成功`);
+      },
+    );
+    return { code: 200, message: '修改密码成功' };
   }
 }

@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-04-05 15:47:15
  * @LastEditors: wangjiawei
- * @LastEditTime: 2021-04-05 17:02:37
+ * @LastEditTime: 2021-04-05 23:13:53
  * @FilePath: /zhihu-end/src/modules/auth/auth.controller.ts
  */
 import { Body, Controller, Post } from '@nestjs/common';
@@ -28,5 +28,13 @@ export class AuthController {
   })
   async userLogin(@Body() userDto: User) {
     return await this.authService.login(userDto);
+  }
+
+  @Post('alter')
+  @ApiOperation({
+    summary: '用户修改密码',
+  })
+  async alter(@Body() userDto: User) {
+    return await this.authService.alter(userDto);
   }
 }
